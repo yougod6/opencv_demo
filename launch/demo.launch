@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<launch>
+
+<include file="$(find realsense2_camera)/launch/rs_camera.launch"/>
+<include file="$(find aruco_ros)/launch/marker_publisher.launch"/>
+
+<node name="camera_to_aruco" pkg="opencv_demo" type="camera_to_aruco"/>
+<node name="aruco_to_end_effector" pkg="opencv_demo" type="aruco_to_end_effector"/>
+<node name="end_effector_listener" pkg="opencv_demo" type="end_effector_listener"/>
+<node name="image_view" pkg="image_view" type="image_view" args="image:=/aruco_marker_publisher/result" />
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find opencv_demo)/rviz/dobo.rviz"/>
+
+</launch>
