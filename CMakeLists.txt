@@ -182,6 +182,10 @@ target_link_libraries(camera_to_aruco ${catkin_LIBRARIES})
 add_executable(end_effector_listener src/end_effector_listener.cpp)
 add_dependencies(end_effector_listener ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(end_effector_listener ${catkin_LIBRARIES})
+
+add_executable(gripper_alignment src/gripper_alignment.cpp)
+add_dependencies(gripper_alignment ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+target_link_libraries(gripper_alignment ${catkin_LIBRARIES})
 #############
 ## Install ##
 #############
