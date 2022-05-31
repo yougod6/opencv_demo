@@ -2,16 +2,15 @@
 #include "aruco_msgs/MarkerArray.h"
 #include "geometry_msgs/Quaternion.h"
 #include "tf/tf.h"
-#include "std_msgs/Float64.h"
+#include "std_msgs/Bool.h"
 
-const _Float64 RAD2REV = 0.1591549431;
-const _Float32 IS_ALINGED = 0.1;
 
 class Marker{
 public:
     Marker(){
+        is_alligned_.data = false;
         sub_ = nh_.subscribe("/aruco_marker_publisher/markers",1,&Marker::callback,this);
-        pub_ = nh_.advertise<std_msgs::Float64>("/error_revolution",1);
+        pub_ = nh_.advertise<std_msgs::Bool>("/is_girpper_aligned",1);
     }
 
     void callback(const aruco_msgs::MarkerArray& input){
@@ -25,23 +24,23 @@ public:
             // double roll, pitch, yaw;
             tfScalar roll, pitch, yaw;
             matrix.getRPY(roll, pitch, yaw);
-            ROS_INFO_STREAM("yaw : "<<yaw<<" rad");
-            rev_.data = yaw*RAD2REV;
-            ROS_INFO_STREAM("rev : "<<rev_);
-            if(abs(yaw)>IS_ALINGED){
-                pub_.publish(rev_);
+            ROS_INFO_STREAM("yaw "<<yaw);
+            if(abs(yaw)<0.1){
+                is_alligned_.data = true;
+                pub_.publish(is_alligned_);
             }
             else{
-                rev_.data = 0;
-                pub_.publish(rev_);
+                is_alligned_.data = false;
+                pub_.publish(is_alligned_);
             }
+        
         }
     }
 private:
     ros::NodeHandle nh_;
     ros::Subscriber sub_;
     ros::Publisher pub_;
-    std_msgs::Float64 rev_;
+    std_msgs::Bool is_alligned_;
 };
 
 int main(int argc, char** argv){
